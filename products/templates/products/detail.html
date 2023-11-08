@@ -1,0 +1,204 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% load jformat %}
+
+{% block title %}
+{{product.title}}
+{% endblock %}
+
+{% block content %}
+<div class="prod-detail container">
+    <div class="title-cart-sec">
+        <p id="cart-added">اضافه شد</p>
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'cart:cart' request.user.id %}">
+                <i class='bx bxs-cart' ></i>
+            </a>
+        {% endif %}
+    </div>
+    <div class="specif">
+        <div class="prod-detail-img">
+            <img
+                src="{{ product.peresentimage.url }}"
+                alt=""
+                id="present-image"
+            />
+            {% for image in productimage %}
+                <img
+                    src="{{image.image.url}}"
+                    alt=""
+                    class="colored-image"
+                    id="image-{{image.color}}"
+                />
+            {% endfor %}
+        </div>
+        <div class="detail">
+            <h1 class="prod-title">{{product.title}}</h1>
+            <ul class="feature">
+                <p>مشخصات:</p>
+                {{product.features|safe}}
+            </ul>
+        </div>
+    </div>
+    <div class="add-to-cart">
+        <div class="top">
+            <p>
+                <img src="{% static 'images/shield_306047.png' %}" alt="" />
+                تضمین کیفیت کالا
+            </p>
+            <p>
+                <img src="{% static 'images/exchange_1585197.png' %}" alt="" />
+                مرجوعی در صورت مشکل داشتن
+            </p>
+        </div>
+        <div class="bottom">
+            <div class="choose-color desktop">
+                <p id="color-errors"></p>
+                <span>انتخاب رنگ:</span>
+                <div class="colors">
+                    {% for color in colors %}
+                    {% if color == 'green' %}
+                        <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="سبز" id="{{color}}"></li>
+                    {% endif %}
+                    {% if color == 'blue' %}
+                        <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="آبی" id="{{color}}"></li>
+                    {% endif %} 
+                    {% if color == 'black' %}
+                        <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="مشکی" id="{{color}}"></li>
+                    {% endif %} 
+                    {% if color == 'brown' %}
+                        <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="قهوه ای" id="{{color}}"></li>
+                    {% endif %} 
+                    {% if color == 'red' %}
+                        <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="قرمز" id="{{color}}"></li>
+                    {% endif %}
+                    {% if color == 'crimson' %}
+                        <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="زرشکی" id="{{color}}"></li>
+                    {% endif %}   
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="price-color">
+                <li class="" id="choosed-color"></li>
+                <div class="cart-price-sec">
+                    {% if product.discount %}
+                        <p class="price off-price"> {{product.offprice}} </p>
+                        <p class="price discount"><span>{{product.price}}</span> تومان</p>
+                    {% else %}
+                        <p class="price">{{product.price}} تومان</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="add-to-cart-btn">
+                <form action="/cart/add-to-cart/{{product.id}}" method="post" id="add-to-cart-form">
+                    {% csrf_token %}
+                    <input value="افزودن به سبد خرید" type="submit" id="add-to-cart-btn" data-running="false" data-product="{{product.id}}">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mobile-specific container">
+    <p>
+        <img src="{% static 'images/shield_306047.png' %}" alt="" />
+        تضمین کیفیت کالا
+    </p>
+    <p>
+        <img src="{% static 'images/exchange_1585197.png' %}" alt="" />
+        مرجوعی در صورت مشکل داشتن
+    </p>
+    <div class="choose-color mobile" id="#choose-color">
+        <span>انتخاب رنگ:</span>
+        <div class="colors">
+            {% for color in colors %}
+            {% if color == 'green' %}
+                <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="سبز" id="{{color}}-mobile"></li>
+            {% endif %}
+            {% if color == 'blue' %}
+                <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="آبی" id="{{color}}-mobile"></li>
+            {% endif %} 
+            {% if color == 'black' %}
+                <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="مشکی" id="{{color}}-mobile"></li>
+            {% endif %} 
+            {% if color == 'brown' %}
+                <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="قهوه ای" id="{{color}}-mobile"></li>
+            {% endif %} 
+            {% if color == 'red' %}
+                <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="قرمز" id="{{color}}-mobile"></li>
+            {% endif %}
+            {% if color == 'crimson' %}
+                <li class="color color-{{color}}" data-toggle="tooltip" data-placement="bottom" title="زرشکی" id="{{color}}-mobile"></li>
+            {% endif %}   
+            {% endfor %}
+        </div>
+    </div>
+    <div class="choosed-color-sec">
+        <span>رنگ انتخاب شده را بغل دکمه سبد خرید ببینید</span>
+    </div>
+</div>
+<div class="description container">
+    <h3>توضیحات:</h3>
+    <p>
+        {{product.description}}
+    </p>
+</div>
+
+<div class="comment-sec container">
+    <h2>دیدگاه&zwnj;ها</h2>
+    <p id="errors"></p>
+    {% if request.user.is_authenticated %}
+    <form action="" class="comment-product-form" method="post" id="{{product.id}}" novalidate>
+        {% csrf_token %}
+        <p id="errors"></p>
+        <textarea placeholder="دیدگاه شما"></textarea>
+        <p class="rating">
+            امتیاز: 
+            <i class='bx bx-star' id="first"></i>
+            <i class='bx bx-star' id="second"></i>
+            <i class='bx bx-star' id="third"></i>
+            <i class='bx bx-star' id="fourth"></i>
+            <i class='bx bx-star' id="fifth"></i>
+        </p>
+        <input type="submit" value="ثبت دیدگاه" class="comment-btn" />
+    </form>
+    {% else %}
+        <p>برای ثبت دیدگاه باید وارد حساب کاربری خود بشید!</p>
+    {% endif %}
+    <div class="comments">
+        <h3 class="score">میانگین امتیازات : {{avg}}</h3>
+        {% for comment in comments %}
+        <div class="comment">
+            <div class="top-sec">
+                <div class="score score-{{comment.score}}">{{comment.score}}</div>
+                <div class="name">
+                    <p>{{comment.user.first_name}} {{comment.user.last_name}}</p>
+                    <span class="date">
+                        <span class="nday">{{comment.created|jformat:"%d"}}</span>
+                        <span class="month">{{comment.created|jformat:"%B"}}</span>
+                        <span class="year">{{comment.created|jformat:"%Y"}}</span>
+                    </span>
+                </div>
+                {% if request.user == comment.user %}
+                    <div class="delete">
+                        <a href="{% url 'products:delete-comment' comment.id %}"><i class='bx bxs-trash'></i></a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="bottom-sec">
+                <div class="desc">
+                    <p>{{comment.body}}</p>
+                </div>
+            </div>
+            {% if request.user.username == '09398708391' %}
+                <div class="admin-delete">
+                    <a href="{% url 'adminpanel:delete-comment' comment.id %}"><i class='bx bxs-trash'></i></a>
+                </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <h3>دیدگاهی ثبت نشده. اولین نفری باشید که کامنت میزارید!</h3>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

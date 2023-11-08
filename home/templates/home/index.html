@@ -1,0 +1,129 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block title %}
+تولید کننده تخصصی کیف چرم
+{% endblock %}
+
+{% block content %}
+<div class="hero container">
+    <div class="main-sec-title">
+        <h1>تولید کننده تخصصی کیف زنانه <span>چرم</span></h1>
+    </div>
+    <div class="hero-img">
+        <img src="{% static 'images/levitating-women-s-bag-display_prev_ui.png' %}" alt="" />
+    </div>
+</div>
+<!-- End of Hero -->
+
+<!-- Benefits -->
+<div class="benefits">
+    <div class="container">
+        <h2 class="sec-title-2">مزایای خرید از ما</h2>
+        <div class="items">
+            <div class="item">
+                <div class="item-img">
+                    <img src="{% static 'images/manufacture.png' %}" alt="" />
+                </div>
+                <div class="content">
+                    <p>خرید مستقیم از تولیدکننده</p>
+                </div>
+            </div>
+            <div class="item">
+                <div class="item-img">
+                    <img src="{% static 'images/money.png' %}" alt="" />
+                </div>
+                <div class="content">
+                    <p>خرید محصولات خاص و یونیک</p>
+                </div>
+            </div>
+            <div class="item">
+                <div class="item-img">
+                    <img src="{% static 'images/guarantee.png' %}" alt="" />
+                </div>
+                <div class="content">
+                    <p>تضمین کیفیت کالا</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Benefits -->
+
+<!-- Handmade -->
+<div class="handmade container">
+    <div class="sec-img">
+        <img
+            src="{% static 'images/20230912125616_[fpdl.in]_close-up-lady-s-bag-isolated-white-background_93675-56028_full_prev_ui.png' %}"
+            alt=""
+        />
+    </div>
+    <div class="handmade-content">
+        <h1 class="sec-title">کیف&zwnj;های کاملا دست دوز</h1>
+        <p class="sec-p">
+            کیف&zwnj;های تولید شده توسط ما کاملا دست دوز و بدون دخالت ماشین
+            می‌باشد و همین مزیت باعث تولید کیف&zwnj;های خاص و شخصی سازی شده
+            می&zwnj;شود.
+        </p>
+        <a href="{% url 'products:products' %}" class="see-prod">
+            <button>دیدن محصولات</button>
+        </a>
+    </div>
+</div>
+<!-- End of Handmade -->
+
+<!-- Buy Directly -->
+<div class="directly container">
+    <div class="directly-content">
+        <h1 class="sec-title">خرید مستقیم از تولید کننده بدون واسطه</h1>
+        <p class="sec-p">
+            با خرید مستقیم از تولید کننده هم از تولید کننده داخلی حمایت کنید هم
+            با قیمت مناسب خرید کنید
+        </p>
+        <a href="{% url 'products:products' %}" class="see-prod">
+            <button>دیدن محصولات</button>
+        </a>
+    </div>
+    <div class="sec-img">
+        <img
+            src="{% static 'images/20230912135334_[fpdl.in]_womens-leather-bag-mockup_1332-4511_full_prev_ui.png' %}"
+            alt=""
+        />
+    </div>
+</div>
+<!-- End of Buy Directly -->
+
+<!-- Products -->
+<div class="products-sec">
+    <div class="container">
+        <h2 class="sec-title-2">محصولات</h2>
+        <div class="items">
+            {% for product in products|slice:":3" %}
+                <div class="item">
+                    <div class="item-img">
+                        <img
+                            src="{{product.peresentimage.url}}"
+                            alt=""
+                        />
+                    </div>
+                    <div class="price">
+                        {% if product.discount %}
+                            <div class="price-sec">
+                                <p class="prod-price off-price">{{product.offprice}}</p>
+                                <p class="prod-price discount"><span>{{product.price}}</span> تومان</p>
+                            </div>
+                        {% else %}
+                            <p class="prod-price">{{product.price}} تومان</p>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'products:detail' product.slug %}">
+                        <button>دیدن محصول</button>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include 'inc/footer.html' %}
+{% endblock %}

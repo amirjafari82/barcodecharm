@@ -1,0 +1,38 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% load jformat %}
+
+{% block title %}
+وبلاگ - {{article.title}}
+{% endblock %}
+
+{% block content %}
+
+<div class="article container">
+    <div class="article-header">
+        <h1>
+            {{article.title}}
+        </h1>
+        <span class="date">
+            <span class="day">{{article.created|jformat:"%A"}}</span>
+            <span class="nday">{{article.created|jformat:"%d"}}</span>
+            <span class="month">{{article.created|jformat:"%B"}}</span>
+            <span class="year">{{article.created|jformat:"%Y"}}</span>
+            <span class="time">- {{article.created|jformat:"%H:%M"}}</span>
+        </span>
+        <span class="views">
+            <span class="material-symbols-outlined view-icon">
+                visibility
+            </span>
+            {{article.views}}
+        </span>
+    </div>
+    <div class="article-img">
+        <img src="{{article.image.url}}" alt="">
+    </div>
+    <div class="article-text">
+        {{article.text|safe}}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,47 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block title %}
+ثبت نام
+{% endblock %}
+
+{% block content %}
+<div class="signup container">
+    <h2>ثبت نام</h2>
+    {% for key,value in form.errors.get_json_data.items %}
+        {% for x in value %}
+            {% for y,z in x.items %}
+                <li class="{{y}}">{{z}}</li>
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+    <form action="" method="post" id="signup-form" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.name == 'username' %}
+            <p>
+                {{field}}
+                <span class="phone-note" id="phone-note">شماره تماس خود را تایید کنید</span>
+                <span class="req-again-txt">تا درخواست دوباره کد تایید : <span id="timer">2:00</span></span>
+                <button class="verify-code-btn" id="send-code">ارسال کد تایید</button>
+            </p>
+            {% elif field.name == 'verifycode' %}
+            <p class="verify-code">
+                {{field}}
+            </p>
+            {% else %}
+            <p>
+                {{field}}
+            </p>
+            {% endif %}
+        {% endfor %}
+        <input type="submit" value="ثبت نام" id="signup-submit" disabled>
+    </form>
+    <p>
+        آیا حساب کاربری دارید؟
+        <a href="{% url 'account:login' %}">
+            وارد شوید
+        </a>
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block title %}
+محصولات
+{% endblock %}
+
+{% block content %}
+<div class="products container">
+    <h2>محصولات</h2>
+    <div class="product-items">
+        {% for product in products %}
+            <a href="{% url 'products:detail' product.slug %}" class="item">
+                <div class="prod-img">
+                    <img src="{{product.peresentimage.url}}" alt="">
+                </div>
+                {% if product.discount %}
+                <div class="content">
+                    <h3 class="prod-title">{{product.title}}</h3>
+                    <div class="price-sec">
+                        <p class="prod-price off-price">{{product.offprice}}</p>
+                        <p class="prod-price discount"><span>{{product.price}}</span> تومان</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="content">
+                    <h3 class="prod-title">{{product.title}}</h3>
+                    <p class="prod-price">{{product.price}} تومان</p>
+                </div>
+                {% endif %}
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

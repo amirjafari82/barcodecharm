@@ -1,0 +1,31 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block title %}
+تماس با ما
+{% endblock %}
+
+{% block content %}
+<div class="contact-us container">
+    <h2>تماس با پشتیبانی</h2>
+    {% for key,value in form.errors.get_json_data.items %}
+        {% for x in value %}
+            {% for y,z in x.items %}
+                <li class="{{y}}">{{z}}</li>
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+    <div class="content">
+        <form action="#" method="post" novalidate>
+            {% csrf_token %}
+            {{form.as_p}}
+            <div class="submit-req">
+                <input type="submit" value="ثبت درخواست">
+            </div>
+        </form>
+        <div class="contact-img">
+            <img src="{% static 'images/Emails-amico.png' %}" alt="">
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load jformat %}
+
+{% block title %}
+پنل ادمین - کامنت ها
+{% endblock %}
+
+{% block content %}
+<div class="admin container">
+    <div class="comments" id="approved-comments">
+        <h2>کامنت های تایید شده</h2>
+        {% for comment in comments %}
+            {% if comment.approved %}
+                <div class="comment">
+                    <h3>محصول : {{comment.product.title}} </h3>
+                    <p> شناسه کامنت : {{comment.id}} </p>
+                    <div class="top-sec">
+                        <div class="score score-{{comment.score}}">{{comment.score}}</div>
+                        <div class="name">
+                            <p>{{comment.user.first_name}} {{comment.user.last_name}}</p>
+                            <span class="date">
+                                <span class="nday">{{comment.created|jformat:"%d"}}</span>
+                                <span class="month">{{comment.created|jformat:"%B"}}</span>
+                                <span class="year">{{comment.created|jformat:"%Y"}}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="bottom-sec">
+                        <div class="desc">
+                            <p>{{comment.body}}</p>
+                        </div>
+                    </div>
+                    {% if request.user.username == '09398708391' %}
+                        <div class="admin-delete">
+                            <a href="{% url 'adminpanel:delete-comment' comment.id %}"><i class='bx bxs-trash'></i></a>
+                        </div>
+                    {% endif %}
+                    <form action="" method="post" class="comment-approve-form" data-comment-id="{{comment.id}}">
+                        {% csrf_token %}
+                        {{approve_form.as_p}}
+                        <input type="submit" value="ثبت">
+                    </form>
+                    <p class="form-status" id="#comment-status-{{comment.id}}"></p>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="comments" id="notapproved-comments">
+    <h2>کامنت های تایید نشده</h2>
+        {% for comment in comments %}
+            {% if comment.approved == False %}
+                <div class="comment">
+                    <h3>محصول : {{comment.product.title}} </h3>
+                    <p> شناسه کامنت : {{comment.id}} </p>
+                    <div class="top-sec">
+                        <div class="score score-{{comment.score}}">{{comment.score}}</div>
+                        <div class="name">
+                            <p>{{comment.user.first_name}} {{comment.user.last_name}}</p>
+                            <span class="date">
+                                <span class="nday">{{comment.created|jformat:"%d"}}</span>
+                                <span class="month">{{comment.created|jformat:"%B"}}</span>
+                                <span class="year">{{comment.created|jformat:"%Y"}}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="bottom-sec">
+                        <div class="desc">
+                            <p>{{comment.body}}</p>
+                        </div>
+                    </div>
+                    {% if request.user.username == '09398708391' %}
+                        <div class="admin-delete">
+                            <a href="{% url 'adminpanel:delete-comment' comment.id %}"><i class='bx bxs-trash'></i></a>
+                        </div>
+                    {% endif %}
+                    <form action="" method="post" class="comment-approve-form" data-comment-id="{{comment.id}}">
+                        {% csrf_token %}
+                        {{approve_form.as_p}}
+                        <input type="submit" value="ثبت">
+                    </form>
+                    <p class="form-status" id="#comment-status-{{comment.id}}"></p>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

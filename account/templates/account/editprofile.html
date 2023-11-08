@@ -1,0 +1,17 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block title %}
+ویرایش مشخصات کاربری
+{% endblock %}
+
+{% block content %}
+<div class="signup container">
+    <h2>ویرایش پروفایل</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="ویرایش مشخصات">
+    </form>
+</div>
+{% endblock %}

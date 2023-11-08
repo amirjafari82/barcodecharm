@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+پنل ادمین - سفارشات
+{% endblock %}
+
+{% block content %}
+<div class="admin container">
+    <h2>سفارشات</h2>
+    <div class="search-orders">
+        <form action="" method="get">
+            {{form.as_p}}
+            <input type="submit" value="جستجو" class="searchbtn">
+        </form>
+    </div>
+    <h3 class="price">درآمد کل: {{income|intcomma}} تومان </h3>
+    <div class="order-items">
+        {% for item in orders %}
+            <div class="item">
+                <div class="order-image">
+                    <img src="{{item.product.peresentimage.url}}" alt="">
+                </div>
+                <div class="order-detail">
+                    <h3>{{item.product.title}}</h3>
+                    {% if forloop.counter > 1 %}
+                        <p class="price">+1 محصول دیگر</p>
+                    {% endif %}
+                    <p class="price">{{ item.totalprice|intcomma }} تومان</p>
+                    <p>کد رهگیری : {{item.ordertracking}}#</p>
+                    <div class="progress">
+                        {% if item.paid %}
+                        <div class="admin-progress admin-paid">
+                            <p>
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                پرداخت شده
+                            </p>
+                        </div>
+                        {% endif %}
+                        {% if item.orderpreparing %}
+                        <div class="admin-progress admin-preparing">
+                            <p>
+                                <span class="material-symbols-outlined">
+                                    design_services
+                                </span>
+                                در حال آماده سازی
+                            </p>
+                        </div>
+                        {% endif %}
+                        {% if item.postdelivered %}
+                        <div class="admin-progress admin-post-delivered">
+                            <p>
+                                <span class="material-symbols-outlined">
+                                    local_shipping
+                                </span>
+                                تحویل داده شده به پست
+                            </p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <a href="{% url 'adminpanel:order-detail' item.id %}" class="see-detail">دیدن جزئیات</a>
+            </div>
+        {% empty %}
+            <p>سفارشی وجود ندارد</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

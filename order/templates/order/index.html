@@ -1,0 +1,186 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+نهایی کردن سفارش - {{request.user.first_name}} {{request.user.last_name}}
+{% endblock %}
+
+{% block content %}
+
+<div class="cart container">
+    <div class="title-cart-sec">
+        <h2>نهایی کردن سفارش</h2>
+    </div>
+    <div class="desktop-items order-items-desktop">
+        {% for item in products %}
+
+            <div class="item">
+                <div class="image">
+                    <a href="{% url 'products:detail' item.product.slug %}">
+                        <img
+                            src="{{item.product.peresentimage.url}}"
+                            alt=""
+                            class="colored-image-cart"
+                            id="image-{{image.color}}"
+                        />
+                        <h4 class="prod-title">{{ item.product.title }}</h4>
+                    </a>
+                    {% for itemcart in cart %}
+                        {% if itemcart.product_id == item.product.id %}
+                        {% with color=itemcart.color %}
+                            {% for test in color %}
+                            <li class="color {{test}} choosed-color"></li>
+                            {% endfor %}
+                        {% endwith %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="numbers">
+                    {% for itemcart in cart %}
+                        {% if itemcart.product_id == item.product.id %}
+                            <p>تعداد: {{itemcart.quantity}}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="price">
+                    {% if item.product.discount %}
+                        <p class="off-price"> {{item.product.offprice}} </p>
+                        <p class="discount"><span>{{item.product.price}}</span> تومان</p>
+                    {% else %}
+                        <p> {{item.product.price}} تومان</p>
+                    {% endif %}
+                </div>
+                <div class="cancle-order">
+                    {% for amir in order_ins %}
+                    <a href="{% url 'order:cancel-order' amir.id %}">
+                        <span class="material-symbols-outlined">
+                            cancel
+                        </span>
+                        لغو سفارش
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            
+        {% endfor %}
+    </div>
+    <div class="mobile-items">
+        {% for item in products %}
+        <div class="item">
+            <div class="specific">
+                <div class="right">
+                    <a href="{% url 'products:detail' item.product.slug %}">
+                        <img
+                            src="{{item.product.peresentimage.url}}"
+                            alt=""
+                            class="colored-image-cart"
+                            id="image-{{image.color}}"
+                        />
+                    </a>
+                    <form class="numbers">
+                        {% for itemcart in cart %}
+                            {% if itemcart.product_id == item.product.id %}
+                                <input type="number" value="{{itemcart.quantity}}" disabled />
+                            {% endif %}
+                        {% endfor %}
+                    </form>
+                </div>
+                <div class="contents">
+                    <h4 class="prod-title">
+                        {{ item.product.title }}
+                    </h4>
+                    <div class="feature">
+                        <li>
+                            <img
+                                src="{% static 'images/guarantee.png' %}"
+                                alt=""
+                            />
+                            تضمین اصالت کالا
+                        </li>
+                        {{item.product.features|safe}}
+                        <div class="choosen-color-cart">
+                            {% with color=request.session.cart.0.color %}
+                            <li class="color {{color}} choosed-color"></li>
+                            {% if color == 'color-green' %}
+                            <span>سبز</span>
+                            {% endif %}
+                            {% if color == 'color-blue' %}
+                                <span>آبی</span>
+                            {% endif %} 
+                            {% if color == 'color-black' %}
+                                <span>مشکی</span>
+                            {% endif %} 
+                            {% if color == 'color-brown' %}
+                            <span>قهوه&zwnj;ای</span>
+                            {% endif %} 
+                            {% if color == 'color-red' %}
+                                <span>قرمز</span>
+                            {% endif %}
+                            {% if color == 'color-crimson' %}
+                                <span>زرشکی</span>
+                            {% endif %}
+                            {% endwith %}           
+                        </div>
+                    </div>
+                    <div class="price">
+                        {% if item.product.discount %}
+                            <p class="off-price"> {{item.product.offprice}} </p>
+                            <p class="discount"><span>{{item.product.price}}</span> تومان</p>
+                        {% else %}
+                            <p> {{item.product.price}} تومان</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="cancle-order">
+        <a href="{% url 'order:cancel-order' order.id %}">
+            <span class="material-symbols-outlined">
+                cancel
+            </span>
+            لغو سفارش
+        </a>
+    </div>
+    <div class="order-details">
+        <form action="" method="post" class="order-discount">
+            {% csrf_token %}
+            {% for field in discount_form %}
+                {{field.label_tag}}
+                {{field}}
+            {% endfor %}
+            <input type="submit" value="اعمال" />
+        </form>
+        <div class="order-summary">
+            <h4>خلاصه سفارش:</h4>
+            <div class="total">
+                <span> جمع کل :</span>
+                <span class="price"> {{order.totalprice|intcomma}} تومان </span>
+                <p>تعداد کل : {{cart|length}}</p>
+                <p>ارسال با پست (رایگان)</p>
+            </div>
+            <p class="notice">
+                توجه : پروسه&zwnj;ی تولید کیف یک هفته طول می&zwnj;کشد.
+            </p>
+        </div>
+        <div class="customer-form">
+            <h3>
+                اطلاعات تحویل&zwnj;گیرنده
+            </h3>
+            <form action="" method="post">
+                {% csrf_token %}
+                {% for field in order_form %}
+                    <p>
+                        {{field.label_tag}}
+                        {{field}}
+                    </p>
+                {% endfor %}
+                <input type="submit" value="پرداخت">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

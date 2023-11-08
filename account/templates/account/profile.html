@@ -1,0 +1,258 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+پروفایل {{request.user.first_name}} {{request.user.last_name}}
+{% endblock %}
+
+{% block content %}
+<div class="profile container">
+    <h3>پروفایل - {{user.first_name}} {{user.last_name}}</h3>
+    <div>
+        <div class="user-specifics">
+            <p class="phone">شماره تماس : {{user.username}}</p>
+            <div class="edit-user-profile">
+                <a href="{% url 'account:edit-profile' request.user.id %}">ویرایش مشخصات کاربری</a>
+                <a href="{% url 'account:change-password' request.user.id %}">ویرایش رمز عبور</a>
+            </div>
+            <div class="user-orders">
+                <h4>سفارشات شما:</h4>
+                {% for order in orders %}
+                            <div class="user-order">
+                                    <div class="order-img">
+                                        <img src="{{order.product.peresentimage.url}}" alt="">
+                                    </div>
+                                    {% if order.paid == True %}
+                                    <div class="order-content">
+                                    {% else %}
+                                    <div class="order-content mb-50">
+                                    {% endif %}
+                                        <h4>
+                                            {{ order.product.title }}
+                                        </h4>
+                                        {% if forloop.counter > 1 %}
+                                            <p class="price">+1 محصول دیگر</p>
+                                        {% endif %}
+                                        <p class="price">{{order.totalprice|intcomma}} تومان</p>
+                                        <a href="{% url 'account:order-detail' order.id %}" class="see-order-detail">دیدن جزئیات سفارش</a>
+                                        <div class="color-sec">
+                                        <li class="color color-{{order.productcolor}} choosed-color"></li>
+                                            {% if product.color == 'green' %}
+                                                <span>سبز</span>
+                                            {% endif %}
+                                            {% if product.color == 'blue' %}
+                                                <span>آبی</span>
+                                            {% endif %} 
+                                            {% if product.color == 'black' %}
+                                                <span>مشکی</span>
+                                            {% endif %} 
+                                            {% if product.color == 'brown' %}
+                                            <span>قهوه&zwnj;ای</span>
+                                            {% endif %} 
+                                            {% if product.color == 'red' %}
+                                                <span>قرمز</span>
+                                            {% endif %}
+                                            {% if product.color == 'crimson' %}
+                                                <span>زرشکی</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if order.paid %}
+                                        <div class="address">
+                                            <p>تحویل گیرنده : {{order.firstname}} {{order.lastname}}</p>
+                                            <p>آدرس : {{order.city}} - {{order.fulladdress}} - {{order.zipcode}} </p>
+                                            <p class="tracking">
+                                                <i class='bx bx-barcode-reader' ></i>
+                                                کد رهگیری سفارش : {{order.ordertracking}}#
+                                            </p>
+                                            {% if order.postdelivered == False %}
+                                            <div class="edit-address">
+                                                <a href="{% url 'account:edit-order' order.id %}">
+                                                    <i class='bx bxs-edit-alt' ></i>
+                                                    ویرایش آدرس و تحویل گیرنده
+                                                </a>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                        <div class="status">
+                                            <h4>وضعیت:</h4>
+                                            <div class="progress-bar">
+                                                {% if order.paid %}
+                                                    <div class="circle-paid active"></div>
+                                                    <div class="circle-pending active"></div>
+                                                {% else %}
+                                                    <div class="circle-pending active"></div>
+                                                    <div class="circle-paid"></div>
+                                                {% endif %}
+                                                {% if order.orderpreparing %}
+                                                    <div class="circle-preparing active"></div>
+                                                {% else %}
+                                                    <div class="circle-preparing"></div>
+                                                {% endif %}
+                                                {% if order.postdelivered %}
+                                                    <div class="circle-posted active"></div>
+                                                {% else %}
+                                                    <div class="circle-posted"></div>
+                                                {% endif %}
+                                                <div class="progressed">
+                                                    {% if order.paid %}
+                                                    <div class="pending">
+                                                        <p>
+                                                            <span class="material-symbols-outlined">
+                                                                pending
+                                                            </span>
+                                                            در انتظار پرداخت
+                                                        </p>
+                                                    </div>
+                                                    <div class="paid">
+                                                        <p>
+                                                            <span class="material-symbols-outlined">
+                                                                done
+                                                            </span>
+                                                            پرداخت شده
+                                                        </p>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="pending">
+                                                        <p>
+                                                            <span class="material-symbols-outlined">
+                                                                pending
+                                                            </span>
+                                                            در انتظار پرداخت
+                                                        </p>
+                                                    </div>
+                                                    <div class="paid non-active">
+                                                        <p>
+                                                            <span class="material-symbols-outlined">
+                                                                done
+                                                            </span>
+                                                            پرداخت شده
+                                                        </p>
+                                                    </div>
+                                                    {% endif %}
+                                                    {% if order.orderpreparing %}
+                                                    <div class="preparing">
+                                                        <p>
+                                                            <span class="material-symbols-outlined">
+                                                                design_services
+                                                            </span>
+                                                            در حال آماده سازی
+                                                        </p>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="preparing non-active">
+                                                        <p>
+                                                            <span class="material-symbols-outlined">
+                                                                design_services
+                                                            </span>
+                                                            در حال آماده سازی
+                                                        </p>
+                                                    </div>
+                                                    {% endif %}
+                                                    {% if order.postdelivered %}
+                                                    <div class="post-delivered">
+                                                        <p>
+                                                            <span class="material-symbols-outlined">
+                                                                local_shipping
+                                                            </span>
+                                                            تحویل داده شده به پست
+                                                        </p>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="post-delivered non-active">
+                                                        <p>
+                                                            <span class="material-symbols-outlined">
+                                                                local_shipping
+                                                            </span>
+                                                            تحویل داده شده به پست
+                                                        </p>
+                                                    </div>
+                                                    {% endif %}
+                                                    {% if order.paid %}
+                                                    <div class="percent first-step">
+                                                    
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="percent">
+                                                    
+                                                    </div>
+                                                    {% endif %}
+                                                    {% if order.orderpreparing %}
+                                                        <div class="percent second-step">
+                                                        
+                                                        </div>
+                                                    {% endif %}
+                                                    
+                                                    {% if order.postdelivered %}
+                                                        <div class="percent third-step">
+                                                        
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if order.postdelivered %}
+                                        <div class="post-tracking">
+                                            <p>
+                                                <i class='bx bx-barcode-reader' ></i>
+                                                کد رهگیری پست: <span class="trackingcode" data-order="{{order.id}}">{{order.posttracking}}</span>
+                                            </p>
+                                            <small id="copied-{{order.id}}">برای کپی کردن روی کد کلیک کنید</small>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    {% if order.paid == False %}
+                                        <div class="cancle-order">
+                                            <a href="{% url 'order:cancel-order' order.id %}">
+                                                <span class="material-symbols-outlined">
+                                                    cancel
+                                                </span>
+                                                لغو سفارش
+                                            </a>
+                                        </div>
+                                        <div class="continue-order">
+                                            <a href="{% url 'order:continue-order' order.id %}">
+                                                <i class='bx bxs-shopping-bags'></i>
+                                                ادامه فرایند خرید
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                            </div>
+                        
+                {% empty %}
+                    <p>سفارشی نداشتید</p>
+                {% endfor %}
+            </div>
+            <div class="contacts">
+                <h3>تماس های شما</h3>
+                {% for item in contacts %}
+                    <div class="contact-item">
+                        <h4>موضوع: {{item.title}}</h4>
+                        <p>پیام : {{item.explanation}}</p>
+                        <p>وضعیت : 
+                            <span class="situation situation-{{item.situation}}">
+                                {% if item.situation == 'Pending' %}
+                                    در انتظار
+                                {% endif %}
+                                {% if item.situation == 'Solved' %}
+                                    پاسخ داده شده
+                                {% endif %}
+                                {% if item.situation == 'In Progress' %}
+                                    در حال پیگیری
+                                {% endif %}
+                            </span>
+                        </p>
+                    </div>
+                {% empty %}
+                    <p>تماسی نداشتید</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="profile-img">
+            <img src="{% static 'images/profile-user.png' %}" alt="">
+        </div>
+    </div>
+</div>
+{% endblock %}

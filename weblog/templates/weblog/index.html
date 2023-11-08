@@ -1,0 +1,34 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block title %}
+وبلاگ
+{% endblock %}
+
+{% block content %}
+
+<div class="weblog container">
+    <h2>وبلاگ</h2>
+    <div class="weblog-articles">
+        {% for article in articles %}
+        <div class="weblog-article">
+            <a href="{% url 'weblog:article' article.slug %}">
+                <img
+                    src="{{article.image.url}}"
+                    alt=""
+                    class="article-img"
+                />
+                <div class="content">
+                    <h2>
+                        {{ article.title }}
+                    </h2>
+                    {{article.text|truncatewords:20|safe}}
+                </div>
+            </a>
+            <a href="{% url 'weblog:article' article.slug %}" class="read-more-article"> ادامه خواندن </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% load humanize %}
+
+{% block title %}
+سبد خرید - {{request.user.first_name}} {{request.user.last_name}}
+{% endblock %}
+
+{% block content %}
+<div class="cart container">
+    <div class="title-cart-sec">
+        <h2>سبد خرید</h2>
+    </div>
+
+    <div class="desktop-items">
+        {% for product in usercart %}
+            <div class="item">
+                <div class="image">
+                    <a href="{% url 'products:detail' product.slug %}">
+                            <img
+                                src="{{product.peresentimage.url}}"
+                                alt=""
+                                class="colored-image-cart"
+                                id="image-{{image.color}}"
+                            />
+                        <h4 class="prod-title">{{ product.title }}</h4>
+                    </a>
+                    {% for item in cart %}
+                        {% if item.product_id == product.id %}
+                        {% with color=item.color %}
+                            {% for test in color %}
+                            <li class="color {{test}} choosed-color"></li>
+                            {% endfor %}
+                        {% endwith %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <form class="numbers" >
+                    {% for item in cart %}
+                    {% if item.product_id == product.id %}
+                    <input type="number" value="{{item.quantity}}" disabled />
+                    {% endif %}
+                    {% endfor %}
+                </form>
+                <a class="delete" href="{% url 'cart:delete_item_cart' product.id %}" id="1">
+                    <i class="bx bx-trash"></i>
+                    حذف از سبد
+                </a>
+                <div class="price">
+                    {% if product.discount %}
+                        <p class="off-price"> {{product.offprice}} </p>
+                        <p class="discount"><span>{{product.price}}</span> تومان</p>
+                    {% else %}
+                        <p> {{product.price}} تومان</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="bottom-cart">
+            <div class="update">
+                <p>
+                   <span>توجه: </span> بعد از نهایی کردن سفارش نمیتوانید محصولات جدید به سبد خرید خود اضافه کنید
+                </p>
+            </div>
+            <div class="total">
+                <span> جمع کل </span>
+                <span class="price"> {{cart.get_total_price|intcomma}} تومان </span>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-items">
+        {% for product in usercart %}
+        <div class="item">
+            <div class="specific">
+                <div class="right">
+                    <a href="{% url 'products:detail' product.slug %}">
+                        <img
+                            src="{{product.peresentimage.url}}"
+                            alt=""
+                            class="colored-image-cart"
+                            id="image-{{image.color}}"
+                        />
+                    </a>
+                    <form class="numbers">
+                        {% for item in cart %}
+                        {% if item.product_id == product.id %}
+                            <input type="number" value="{{item.quantity}}" disabled />
+                        {% endif %}
+                        {% endfor %}
+                    </form>
+                </div>
+                <div class="contents">
+                    <h4 class="prod-title">
+                        {{ product.title }}
+                    </h4>
+                    <div class="feature">
+                        <li>
+                            <img
+                                src="{% static 'images/guarantee.png' %}"
+                                alt=""
+                            />
+                            تضمین اصالت کالا
+                        </li>
+                        {{product.features|safe}}
+                        <div class="choosen-color-cart">
+                            {% for item in cart %}
+                        {% if item.product_id == product.id %}
+                        {% with color=item.color %}
+                            {% for test in color %}
+                            <li class="color {{test}} choosed-color"></li>
+                            {% endfor %}
+                        {% endwith %}
+                        {% endif %}
+                    {% endfor %}          
+                        </div>
+                    </div>
+                    <div class="price">
+                        {% if product.discount %}
+                            <p class="off-price"> {{product.offprice}} </p>
+                            <p class="discount"><span>{{product.price}}</span> تومان</p>
+                        {% else %}
+                            <p> {{product.price}} تومان</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <a class="delete" href="{% url 'cart:delete_item_cart' product.id %}" id="1">
+                <i class="bx bx-trash"></i>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="end-purchase-desktop">
+        <div>
+            
+        </div>
+        <div class="purchase">
+            <a href="{% url 'order:order' request.user.id %}">
+                <button>نهایی کردن سفارش</button>
+            </a>
+        </div>
+    </div>
+    <div class="end-purchase-mobile">
+        <div class="purchase">
+            <a href="{% url 'order:order' request.user.id %}">
+                <button>نهایی کردن سفارش</button>
+            </a>
+            <div class="total">
+                <p>جمع سبد خرید</p>
+                <span class="price"> {{cart.get_total_price|intcomma}} تومان </span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block title %}
+    {% if status == True %}
+        پرداخت موفق
+    {% else %}
+        پرداخت ناموفق
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="order-situation container">
+
+    {% if status == True %}
+        <h3>پرداخت با موفقیت انجام شد</h3>
+        <p>
+            کد رهگیری سفارش : <span>{{order.ordertracking}}#</span>
+        </p>
+        <p>در قسمت <a href="{% url 'account:profile' request.user.id %}">پروفایل</a> خود میتوانید وضعیت سفارش خود را ببینید</p>
+    {% else %}
+        <h3 class="pay-false">پرداخت با خطا مواجه شد</h3>
+        <p>اگر پول از حساب شما کسر شده تا 72 ساعت آینده به حساب شما بازگردانده میشود</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

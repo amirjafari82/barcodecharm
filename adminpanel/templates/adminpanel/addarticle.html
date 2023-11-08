@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+پنل ادمین - اضافه کردن مقاله
+{% endblock %}
+
+{% block content %}
+<div class="admin-oper container">
+    <div class="add-form">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="اضافه کردن مقاله">
+        </form>
+    </div>
+</div>
+{% endblock %}

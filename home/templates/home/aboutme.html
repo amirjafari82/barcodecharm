@@ -1,0 +1,45 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block title %}
+درباره من 
+{% endblock %}
+
+{% block content %}
+<div class="about-me-desktop container">
+    <div class="content">
+        <h2>درباره من</h2>
+        <p>
+            من امیرمهدی جنیدی کارآفرین فعال در حوزه کیف چرمی دست&zwnj;دوز هستم.
+            هدف من و مجموعه ارائه خاص&zwnj;ترین و بهترین کیف&zwnj;های
+            دست&zwnj;دوز برای افرادی که کیف با کیفیت و خاص میخوان که از
+            کیف&zwnj;های عامه در بازار خسته شدند. بنده از سال 1397 وارد این حوزه
+            شدم و 2 ساله که در این حوزه به صورت حرفه&zwnj;ای کار می&zwnj;کنم.
+        </p>
+    </div>
+    <div class="image">
+        <img
+            src="{% static 'images/20230915174246_[fpdl.in]_woodworker-making-wooden-table-cabinet-maker-working-isolated-white-background_533410-1342_full.jpg' %}"
+            alt=""
+        />
+    </div>
+</div>
+<div class="about-me-mobile container">
+    <h2>درباره من</h2>
+    <div class="image">
+        <img
+            src="{% static 'images/20230915174246_[fpdl.in]_woodworker-making-wooden-table-cabinet-maker-working-isolated-white-background_533410-1342_full.jpg' %}"
+            alt=""
+        />
+    </div>
+    <div class="content">
+        <p>
+            من امیرمهدی جنیدی کارآفرین فعال در حوزه کیف چرمی دست&zwnj;دوز هستم.
+            هدف من و مجموعه ارائه خاص&zwnj;ترین و بهترین کیف&zwnj;های
+            دست&zwnj;دوز برای افرادی که کیف با کیفیت و خاص میخوان که از
+            کیف&zwnj;های عامه در بازار خسته شدند. بنده از سال 1397 وارد این حوزه
+            شدم و 2 ساله که در این حوزه به صورت حرفه&zwnj;ای کار می&zwnj;کنم.
+        </p>
+    </div>
+</div>
+{% endblock %}

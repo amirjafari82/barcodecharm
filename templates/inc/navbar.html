@@ -1,0 +1,81 @@
+{% load static %}
+<header class="container">
+    <div class="hamburger-menu">
+        <div class="first"></div>
+        <div class="second"></div>
+        <div class="third"></div>
+    </div>
+    <nav class="desktop-menu">
+        <li><a href="{% url 'home:home' %}">صفحه اصلی</a></li>
+        <li><a href="{% url 'products:products' %}">محصولات</a></li>
+        <li><a href="{% url 'home:aboutme' %}">درباره من</a></li>
+        <li><a href="{% url 'weblog:weblog' %}">وبلاگ</a></li>
+        <li><a href="{% url 'contactus:contact' %}">تماس با پشتیبانی</a></li>
+        {% if request.user.is_authenticated %}
+            <div class="panel-menu">
+                <li class="user-panel">
+                    <i class='bx bxs-user'></i> پنل کاربری
+                </li>
+                <ul class="user-panel-items">
+                    <li class="profile-btn"><a href="{% url 'account:profile' request.user.id %}">
+                        <span class="material-symbols-outlined">
+                            account_circle
+                        </span>
+                        پروفایل
+                    </a></li>
+                    <li class="cart"><a href="{% url 'cart:cart' request.user.id %}"><i class='bx bx-cart' ></i>سبد خرید</a></li>
+                    {% if request.user.username == '09398708391' %}
+                    <li class="admin-panel-menu">
+                        <a href="{% url 'adminpanel:adminpanel' %}"><span class="material-symbols-outlined">
+                        admin_panel_settings
+                        </span>
+                        پنل ادمین
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="logout"><a href="{% url 'account:logout' %}"><i class='bx bx-log-out'></i>خروج</a></li>
+                </ul>
+            </div>
+        {% else %}
+            <li><a href="{% url 'account:login' %}">ورود</a>/<a href="{% url 'account:signup' %}">ثبت نام</a></li>
+        {% endif %}
+    </nav>
+    <nav class="mobile-menu">
+        <li><a href="{% url 'home:home' %}">صفحه اصلی</a></li>
+        <li><a href="{% url 'products:products' %}">محصولات</a></li>
+        <li><a href="{% url 'home:aboutme' %}">درباره من</a></li>
+        <li><a href="{% url 'weblog:weblog' %}">وبلاگ</a></li>
+        <li><a href="{% url 'contactus:contact' %}">تماس با پشتیبانی</a></li>
+        {% if request.user.is_authenticated %}
+        <div class="panel-menu">
+            <li class="user-panel">
+                <i class='bx bxs-user'></i> پنل کاربری
+            </li>
+            <ul class="user-panel-items">
+                <li class="profile-btn"><a href="{% url 'account:profile' request.user.id %}">
+                    <span class="material-symbols-outlined">
+                        account_circle
+                    </span>
+                    پروفایل
+                </a></li>
+                <li class="logout"><a href="{% url 'cart:cart' request.user.id %}"><i class='bx bx-cart' ></i>سبد خرید</a></li>
+                {% if request.user.username == '09398708391' %}
+                    <li class="admin-panel-menu"><a href="{% url 'adminpanel:adminpanel' %}"><span class="material-symbols-outlined">
+                        admin_panel_settings
+                        </span>
+                        پنل ادمین
+                    </a></li>
+                {% endif %}
+                <li class="logout"><a href="{% url 'account:logout' %}"><i class='bx bx-log-out'></i>خروج</a></li>
+            </ul>
+        </div>
+        {% else %}
+        <li><a href="{% url 'account:login' %}">ورود</a>/<a href="{% url 'account:signup' %}">ثبت نام</a></li>
+        {% endif %}
+    </nav>
+    <div class="logo">
+        <a href="/">
+            <img src="{% static 'images/لوگو پیشرو چرم.png' %}" alt="" />
+        </a>
+    </div>
+</header>

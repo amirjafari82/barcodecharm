@@ -1,0 +1,128 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+جزئیات سفارش
+{% endblock %}
+
+{% block content %}
+    {% with products=order.order.all %}
+        <div class="cart container">
+            <div class="desktop-items order-items-desktop">
+                {% for product in products %}
+                    <div class="item">
+                        <div class="image">
+                            <a href="{% url 'products:detail' product.product.slug %}">
+                                <img
+                                    src="{{product.product.peresentimage.url}}"
+                                    alt=""
+                                    class="colored-image-cart"
+                                    id="image-{{image.color}}"
+                                />
+                                <h4 class="prod-title">{{ product.product.title }}</h4>
+                            </a>
+                            {% for id,colors in colors.items %}
+                                    {% if id == product.id %}
+                                        {% for color in colors.color %}
+                                            <li class="color {{color}} choosed-color"></li>
+                                            {% if color == 'color-green' %}
+                                                <span>سبز</span>
+                                            {% endif %}
+                                            {% if color == 'color-blue' %}
+                                                <span>آبی</span>
+                                            {% endif %} 
+                                            {% if color == 'color-black' %}
+                                                <span>مشکی</span>
+                                            {% endif %} 
+                                            {% if color == 'color-brown' %}
+                                                <span>قهوه&zwnj;ای</span>
+                                            {% endif %} 
+                                            {% if color == 'color-red' %}
+                                                <span>قرمز</span>
+                                            {% endif %}
+                                            {% if color == 'color-crimson' %}
+                                                <span>زرشکی</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="price">
+                            {% if item.product.discount %}
+                                <p class="off-price"> {{product.product.offprice}} </p>
+                                <p class="discount"><span>{{product.product.price}}</span> تومان</p>
+                            {% else %}
+                                <p> {{product.product.price}} تومان</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="mobile-items">
+                {% for product in products %}
+                <div class="item">
+                    <div class="specific">
+                        <div class="right">
+                            <a href="{% url 'products:detail' product.product.slug %}">
+                                <img
+                                    src="{{product.product.peresentimage.url}}"
+                                    alt=""
+                                    class="colored-image-cart"
+                                    id="image-{{image.color}}"
+                                />
+                            </a>
+                        </div>
+                        <div class="contents">
+                            <h4 class="prod-title">
+                                {{ product.product.title }}
+                            </h4>
+                            <div class="feature">
+                                <li>
+                                    <img
+                                        src="{% static 'images/guarantee.png' %}"
+                                        alt=""
+                                    />
+                                    تضمین اصالت کالا
+                                </li>
+                                {{product.product.features|safe}}
+                                <div class="choosen-color-cart">
+                                    {% for id,colors in colors.items %}
+                                        {% if id == product.id %}
+                                            {% for color in colors.color %}
+                                                <li class="color {{color}} choosed-color"></li>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}       
+                                </div>
+                            </div>
+                            <div class="price">
+                                {% if item.product.discount %}
+                                    <p class="off-price"> {{product.product.offprice}} </p>
+                                    <p class="discount"><span>{{product.product.price}}</span> تومان</p>
+                                {% else %}
+                                    <p> {{product.product.price}} تومان</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="order-details">
+                <div class="order-summary">
+                    <h4>خلاصه سفارش:</h4>
+                    <div class="total">
+                        <span> جمع کل :</span>
+                        <span class="price"> {{order.totalprice|intcomma}} تومان </span>
+                        <p>ارسال با پست (رایگان)</p>
+                    </div>
+                    <p class="notice">
+                        توجه : پروسه&zwnj;ی تولید کیف یک هفته طول می&zwnj;کشد.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    {% endwith %}
+{% endblock %}

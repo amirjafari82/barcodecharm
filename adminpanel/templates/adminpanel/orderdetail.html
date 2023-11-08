@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+پنل ادمین - سفارشات
+{% endblock %}
+
+{% block content %}
+{% with products=order.order.all %}
+<div class="admin container">
+    <h2>سفارشات</h2>
+    <div class="order-item">
+        {% for product in products %}
+        {% if product.order == order %}
+        <div class="order">
+            <div class="order-image">
+                <img src="{{product.product.peresentimage.url}}" alt="">
+            </div>
+            <div class="order-det">
+                <h3>{{product.product.title}}</h3>
+                <div class="color-sec">
+                    {% for id,colors in colors.items %}
+                        {% if id == product.id %}
+                            {% for color in colors.color %}
+                                <li class="color {{color}} choosed-color"></li>
+                                {% if color == 'color-green' %}
+                                    <span>سبز</span>
+                                {% endif %}
+                                {% if color == 'color-blue' %}
+                                    <span>آبی</span>
+                                {% endif %} 
+                                {% if color == 'color-black' %}
+                                    <span>مشکی</span>
+                                {% endif %} 
+                                {% if color == 'color-brown' %}
+                                    <span>قهوه&zwnj;ای</span>
+                                {% endif %} 
+                                {% if color == 'color-red' %}
+                                    <span>قرمز</span>
+                                {% endif %}
+                                {% if color == 'color-crimson' %}
+                                    <span>زرشکی</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+            {% endif %}
+            {% endfor %}
+    </div>
+    <div class="order-post-detail">
+        <p class="price">قیمت کل : {{ order.totalprice|intcomma }} تومان</p>
+        <h4>
+            ثبت کننده سفارش : {{order.user.first_name}} {{order.user.last_name}}
+        </h4>
+        <h4>
+            شماره تماس ثبت کننده : {{order.user.username}}
+        </h4>
+        <h4>کد رهگیری : {{order.ordertracking}}#</h4>
+        <div class="address">
+            <h4>مشخصات گیرنده: </h4>
+            <p class="name">
+                نام و نام خانوادگی : {{order.firstname}} {{order.lastname}}
+            </p>
+            <p class="phone">
+                شماره تماس : {{order.phonenumber}}
+            </p>
+            <p class="city">
+                استان : {{order.city}}
+            </p>
+            <p class="fulladdress">
+                آدرس پستی : {{order.fulladdress}}
+            </p>
+            <p class="zipcode">
+                کد پستی : {{order.zipcode}}
+            </p>
+        </div>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="ثبت">
+        </form>
+    </div>
+    </div>
+</div>
+{% endwith %}
+{% endblock %}

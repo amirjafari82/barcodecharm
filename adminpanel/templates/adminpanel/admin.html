@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+پنل ادمین
+{% endblock %}
+
+{% block content %}
+<div class="admin container">
+    <h2>پنل ادمین</h2>
+    <div class="operations">
+        <div class="see-orders">
+            <a href="{% url 'adminpanel:orders' %}">
+                دیدن سفارشات
+            </a>
+        </div>
+        <div class="see-comments">
+            <a href="{% url 'adminpanel:comments' %}">
+                دیدن کامنت ها
+            </a>
+        </div>
+        <div class="add-discount">
+            <h3>کدهای تخفیف</h3>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{discount_form.as_p}}
+                <input type="submit" value="اضافه کردن">
+            </form>
+            <div class="discount-codes">
+                {% for discount in discounts %}
+                <div class="item">
+                    <div class="discount-code">
+                        <p>کد تخفیف:</p>
+                        <span>{{discount.code}}</span>
+                    </div>
+                    <div class="dicount-percent">
+                        <p>درصد تخفیف:</p>
+                        <span>%{{discount.discount}}</span>
+                    </div>
+                    <div class="delete">
+                        <a href="{% url 'adminpanel:delete-discount' discount.id %}"><i class='bx bx-trash'></i>حذف</a>
+                    </div>
+                </div>
+                {% empty %}
+                    <p>کدی وجود ندارد</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="admin-products">
+            <h3>محصولات</h3>
+            <div class="oper">
+                <a href="{% url 'adminpanel:add-product' %}" class="oper-btn add-product">
+                    <i class="bx bx-plus"></i>
+                    اضافه کردن محصول
+                </a>
+            </div>
+            <div class="product-items">
+                {% for product in products %}
+                    <div href="{% url 'products:detail' product.slug %}" class="item">
+                        <div class="prod-img">
+                            <img src="{{product.peresentimage.url}}" alt="">
+                        </div>
+                        {% if product.discount %}
+                        <div class="content">
+                            <h3 class="prod-title">{{product.title}}</h3>
+                            <div class="price-sec">
+                                <p class="prod-price off-price">{{product.offprice}}</p>
+                                <p class="prod-price discount"><span>{{product.price}}</span> تومان</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="content">
+                            <h3 class="prod-title">{{product.title}}</h3>
+                            <p class="prod-price">{{product.price}} تومان</p>
+                        </div>
+                        {% endif %}
+                        <div class="admin-btns">
+                            <a href="{% url 'adminpanel:update-product' product.id %}" class="oper-btn update-product">
+                                <i class="bx bx-refresh"></i>
+                                آپدیت محصول
+                            </a>
+                            <a href="{% url 'adminpanel:delete-product' product.id %}" class="oper-btn delete-product">
+                                <i class="bx bx-trash"></i>
+                                حذف محصول
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="articles">
+            <h3>وبلاگ</h3>
+            <div class="oper">
+                <a href="{% url 'adminpanel:add-article' %}" class="oper-btn add-product">
+                    <i class="bx bx-plus"></i>
+                    اضافه کردن مقاله
+                </a>
+            </div>
+            <div class="article-items">
+                {% for article in articles %}
+                    <div class="admin-article">
+                        <div class="article-image">
+                            <img src="{{article.image.url}}" alt="">
+                        </div>
+                        <div class="article-title">
+                            <h4>{{ article.title }}</h4>
+                            <span class="views">
+                                <span class="material-symbols-outlined">
+                                visibility
+                                </span>
+                                {{article.views}}
+                            </span>
+                            <div class="admin-btns">
+                                <a href="{% url 'adminpanel:update-article' article.id %}" class="oper-btn update-product">
+                                    <i class="bx bx-refresh"></i>
+                                    آپدیت مقاله
+                                </a>
+                                <a href="{% url 'adminpanel:delete-article' article.id %}" class="oper-btn delete-product">
+                                    <i class="bx bx-trash"></i>
+                                    حذف مقاله
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="contacts">
+            <h3>تماس ها</h3>
+            {% for item in contacts %}
+                <div class="contact-item admin-contact-item">
+                    <h4>{{ item.firstname }} {{ item.lastname }}</h4>
+                    <p>شماره تماس : {{item.phonenumber}}</p>
+                    <h4>موضوع: {{item.title}}</h4>
+                    <p>پیام : {{item.explanation}}</p>
+                    <form action="" method="post" data-contact-id="{{item.id}}">
+                        {% csrf_token %}
+                        {{contact_form.as_p}}
+                        <input type="submit" value="ثبت وضعیت">
+                    </form>
+                    <p>وضعیت کنونی : <span id="real-situation-{{item.id}}">{{item.situation}}</span></p>
+                    <p class="form-status" id="#form-status-{{item.id}}"></p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
